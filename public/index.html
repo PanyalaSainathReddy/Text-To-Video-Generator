@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text to Speech</title>
+</head>
+<body>
+  <h1>Text to Speech</h1>
+  <form id="textForm">
+    <label for="text">Text:</label>
+    <input type="text" id="text" name="text" required>
+    <br>
+    <label for="emotion">Emotion:</label>
+    <select id="emotion" name="emotion">
+      <option value="neutral">Neutral</option>
+      <option value="angry">Angry</option>
+      <option value="sad">Sad</option>
+      <!-- Can add more emotions here -->
+    </select>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+  <audio id="audioPlayer" controls></audio>
+
+  <script>
+    document.getElementById('textForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const text = document.getElementById('text').value;
+      const emotion = document.getElementById('emotion').value;
+
+      const response = await fetch('/text-to-speech', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text, emotion })
+      });
+
+      const data = await response.json();
+      const audioPlayer = document.getElementById('audioPlayer');
+      audioPlayer.src = data.audioFileName;
+    });
+  </script>
+</body>
+</html>
